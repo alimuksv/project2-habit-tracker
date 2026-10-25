@@ -1,0 +1,10 @@
+
+databaseChangeLog:
+  - changeSet:
+      id: 003-change-record-date-type
+      author: alim
+      changes:
+        - modifyDataType:
+            tableName: habits
+            columnName: created_at
+            newDataType: DATE

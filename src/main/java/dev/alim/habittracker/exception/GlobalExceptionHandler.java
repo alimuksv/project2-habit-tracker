@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler
+    @ExceptionHandler(HabitNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleHabitNotFoundException(
             HabitNotFoundException e
     ){
@@ -62,9 +62,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDto);
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(
+            IllegalStateException e
+    ){
+        log.error("Handle IllegalArgumentException ", e);
+
+        var errorDto = new ErrorResponseDto(
+                "Record already exist",
+                e.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorDto);
+    }
+
     @ExceptionHandler(exception = {
-            HttpMessageNotReadableException.class,
-            MethodArgumentNotValidException.class
+            HttpMessageNotReadableException.class
     })
     public ResponseEntity<ErrorResponseDto> handleHttpMessageException(
             HttpMessageNotReadableException e
@@ -76,6 +89,19 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now()
         );
 
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDto);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponseDto> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException e
+    ) {
+        log.error("Handle methodArgumentNotValidException ", e);
+        var errorDto = new ErrorResponseDto(
+                "Not correct input",
+                e.getMessage(),
+                LocalDateTime.now()
+        );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDto);
     }
 

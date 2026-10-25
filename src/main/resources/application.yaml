@@ -1,0 +1,24 @@
+##spring.application.name=habit-tracker
+
+##spring.jackson.deserialization.fail-on-unknown-properties=true
+
+spring:
+  application:
+    name: habit-tracker
+
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/habit_tracker
+    username: postgres
+    password: secret
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true

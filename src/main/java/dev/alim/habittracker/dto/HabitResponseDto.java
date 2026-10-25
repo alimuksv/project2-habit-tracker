@@ -1,6 +1,7 @@
 package dev.alim.habittracker.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+
 
 public record HabitResponseDto(
 
@@ -12,7 +13,7 @@ public record HabitResponseDto(
 
     Integer target,
 
-    LocalDateTime createAt
+    LocalDate createAt
 )
 
 { }

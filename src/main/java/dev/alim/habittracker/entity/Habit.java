@@ -1,23 +1,45 @@
 package dev.alim.habittracker.entity;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.util.List;
 
+@Table(name = "habits")
+@Entity
 public class Habit {
 
-    private final Long id;
-    private final String name;
-    private final String description;
-    private final Integer target;
-    private final LocalDateTime createdAt;
+    @Id
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "target")
+    private Integer target;
+
+    @Column(name = "createdAt")
+    private LocalDate createdAt;
+
+    @OneToMany(mappedBy = "habit", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Record> records;
+
+
+    public Habit() {
+
+    }
 
     public Habit(Long id, String name, String description, Integer target ) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.target = target;
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = LocalDate.now();
     }
 
     public Long getId() {
@@ -36,7 +58,7 @@ public class Habit {
         return target;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
