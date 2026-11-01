@@ -32,7 +32,7 @@ public class Record {
     public Record(Long id, Habit habit, LocalDate date) {
         this.id = id;
         this.habit = habit;
-        this.date = LocalDate.now();
+        this.date = date;
     }
 
     public Long getId() {

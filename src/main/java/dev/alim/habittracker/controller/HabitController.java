@@ -1,8 +1,7 @@
 package dev.alim.habittracker.controller;
 
-import dev.alim.habittracker.dto.HabitRequestDto;
-import dev.alim.habittracker.dto.HabitResponseDto;
-import dev.alim.habittracker.entity.Habit;
+import dev.alim.habittracker.dto.HabitDto.HabitRequestDto;
+import dev.alim.habittracker.dto.HabitDto.HabitResponseDto;
 import dev.alim.habittracker.service.HabitService;
 
 import jakarta.validation.Valid;

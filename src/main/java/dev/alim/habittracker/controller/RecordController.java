@@ -1,9 +1,8 @@
 package dev.alim.habittracker.controller;
 
 
-import dev.alim.habittracker.dto.RecordRequestDto;
-import dev.alim.habittracker.dto.RecordResponseDto;
-import dev.alim.habittracker.entity.Record;
+import dev.alim.habittracker.dto.RecordDto.RecordRequestDto;
+import dev.alim.habittracker.dto.RecordDto.RecordResponseDto;
 import dev.alim.habittracker.service.RecordService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;

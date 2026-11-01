@@ -1,4 +1,4 @@
-package dev.alim.habittracker.dto;
+package dev.alim.habittracker.dto.HabitDto;
 
 import java.time.LocalDate;
 

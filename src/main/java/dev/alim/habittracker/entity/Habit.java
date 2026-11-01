@@ -29,6 +29,8 @@ public class Habit {
     @OneToMany(mappedBy = "habit", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Record> records;
 
+    @Column(name = "best_streak", nullable = false)
+    private int bestStreak = 0;
 
     public Habit() {
 
@@ -60,6 +62,18 @@ public class Habit {
 
     public LocalDate getCreatedAt() {
         return createdAt;
+    }
+
+    public Integer getBestStreak(){
+        return bestStreak;
+    }
+
+    public void setBestStreak(Integer newBestStreak){
+        bestStreak = newBestStreak;
+    }
+
+    public void setCreatedAt(LocalDate newCreatedAt){
+        createdAt = newCreatedAt;
     }
 
 

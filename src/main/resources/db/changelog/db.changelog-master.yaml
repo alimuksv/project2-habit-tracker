@@ -5,3 +5,5 @@ databaseChangeLog:
       file: db/changelog/changes/002-create-records-table.yaml
   - include:
       file: db/changelog/changes/003-change-all-date-type.yaml    #поменял тип с LocalDateTime на LocalDate
+  - include:
+      file: db/changelog/changes/004-add-best-streak-to-habits.yaml   #добавил best_streak в habits

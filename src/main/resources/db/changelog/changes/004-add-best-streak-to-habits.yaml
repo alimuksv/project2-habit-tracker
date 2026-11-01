@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-add-best-streak-to-habits
+      author: alim
+      changes:
+        - addColumn:
+            tableName: habits
+            columns:
+              - column:
+                  name: best_streak
+                  type: INTEGER
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false

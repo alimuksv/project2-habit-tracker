@@ -1,19 +1,17 @@
 package dev.alim.habittracker.service;
 
-import dev.alim.habittracker.dto.HabitRequestDto;
-import dev.alim.habittracker.dto.HabitResponseDto;
+import dev.alim.habittracker.dto.HabitDto.HabitRequestDto;
+import dev.alim.habittracker.dto.HabitDto.HabitResponseDto;
 import dev.alim.habittracker.entity.Habit;
 import dev.alim.habittracker.exception.HabitNotFoundException;
 
 import dev.alim.habittracker.repository.HabitRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class HabitService{
@@ -27,7 +25,7 @@ public class HabitService{
         this.repository = repository;
     }
 
-
+    @Transactional(readOnly = true)
     public HabitResponseDto getHabitById(Long id) {
         log.info("Called getHabitById: id {}", id );
 //        if(!habitMap.containsKey(id)){
@@ -40,6 +38,7 @@ public class HabitService{
         return habitToResponseDto(habitEntity);
     }
 
+    @Transactional(readOnly = true)
     public List<HabitResponseDto> findAllHabits(){
         log.info("Called findAllHabits");
 
@@ -57,6 +56,7 @@ public class HabitService{
     return habits;
     }
 
+    @Transactional
     public HabitResponseDto createHabit(HabitRequestDto habitToCreate){
 
         log.info("Called createHabit");
@@ -75,6 +75,7 @@ public class HabitService{
         return habitToResponseDto(savedEntity); /// бд сама дает идентификатор(id) и мы корректно возвращаем результат
     }
 
+    @Transactional
     public HabitResponseDto updateHabitById(
             Long id,
             HabitRequestDto habitToUpdate
@@ -104,6 +105,7 @@ public class HabitService{
         return habitToResponseDto(updatedHabit);
     }
 
+    @Transactional
     public void deleteHabitById(Long id){
         log.info("Called deleteHabitById: id = {}", id);
 

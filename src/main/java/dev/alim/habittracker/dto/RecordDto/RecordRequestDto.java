@@ -1,4 +1,4 @@
-package dev.alim.habittracker.dto;
+package dev.alim.habittracker.dto.RecordDto;
 
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;

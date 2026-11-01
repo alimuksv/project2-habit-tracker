@@ -1,8 +1,8 @@
 package dev.alim.habittracker.service;
 
 
-import dev.alim.habittracker.dto.RecordRequestDto;
-import dev.alim.habittracker.dto.RecordResponseDto;
+import dev.alim.habittracker.dto.RecordDto.RecordRequestDto;
+import dev.alim.habittracker.dto.RecordDto.RecordResponseDto;
 import dev.alim.habittracker.entity.Habit;
 import dev.alim.habittracker.entity.Record;
 import dev.alim.habittracker.exception.HabitNotFoundException;
@@ -11,6 +11,7 @@ import dev.alim.habittracker.repository.RecordRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,14 +22,16 @@ public class RecordService {
 
     private final RecordRepository recordRepository;
     private final HabitRepository habitRepository;
+    private final StatsService statsService;
 
 
-    public RecordService(RecordRepository recordRepository, HabitRepository habitRepository){
+    public RecordService(RecordRepository recordRepository, HabitRepository habitRepository, StatsService statsService){
         this.recordRepository = recordRepository;
         this.habitRepository = habitRepository;
-
+        this.statsService = statsService;
     }
 
+    @Transactional(readOnly = true)
     public List<RecordResponseDto> findRecordsByHabitId(Long id){
         log.info("Called findRecordById: id = {}", id);
 
@@ -43,7 +46,7 @@ public class RecordService {
         log.info("Successfully called findRecordById: id = {} ", id);
         return recordEntity;
     }
-
+    @Transactional(readOnly = true)
     public List<RecordResponseDto> findAllRecords(){
         log.info("Called findAllRecords");
 
@@ -53,12 +56,12 @@ public class RecordService {
         return records;
     }
 
+    @Transactional
     public RecordResponseDto createRecord(RecordRequestDto record){
         log.info("Called createRecord");
 
-
         Habit habit = habitRepository.findById(record.habitId())
-                .orElseThrow(() -> new HabitNotFoundException("Habit not found" ));
+                .orElseThrow(() -> new HabitNotFoundException("Habit not found by habitId = " + record.habitId() ));
 
         boolean alreadyRecorded = recordRepository.existsByHabit_IdAndDate(
                 record.habitId(),
@@ -77,12 +80,26 @@ public class RecordService {
         );
 
         var savedRecord = recordRepository.save(recordToCreate);
+
+        //Проверка валидности лучшей серии при добавлении Record
+        int bestStreak = statsService.calculateBestStreak(habit.getId());
+
+        if(bestStreak > habit.getBestStreak()) {
+
+            log.info("Set new bestStreak by habitId = {}", habit.getId());
+            habit.setBestStreak(bestStreak);
+
+            habitRepository.save(habit);
+
+        }
+
         log.info("Successfully createRecord");
 
         return recordToRecordResponseDto(savedRecord);
 
     }
 
+    @Transactional
     public RecordResponseDto updateRecord(Long id, RecordRequestDto recordToUpdate){
         log.info("Called updateRecord: id = {} ", id);
 
@@ -104,6 +121,7 @@ public class RecordService {
         return recordToRecordResponseDto(savedRecord);
     }
 
+    @Transactional
     public void deleteRecord(Long id){
         log.info("Called deleteRecord: id = {}", id);
 
@@ -117,9 +135,6 @@ public class RecordService {
 
 
 
-
-
-
     private RecordResponseDto recordToRecordResponseDto(dev.alim.habittracker.entity.Record record){
 
         RecordResponseDto recordToResponse = new RecordResponseDto(
@@ -129,6 +144,8 @@ public class RecordService {
                 );
         return recordToResponse;
     }
+
+
 
 
 }
