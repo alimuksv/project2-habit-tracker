@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -66,5 +68,26 @@ public class HabitServiceTest {
     void habitNotFoundByIdTest(){
         assertThrows(HabitNotFoundException.class,
                 () -> habitService.getHabitById(999L));
+    }
+
+    @Test
+    void updateHabitPreservesCreatedAtAndBestStreakTest(){
+        LocalDate originalCreatedAt = LocalDate.now().minusDays(10);
+        Habit habit = new Habit(null, "Learn java", "every day", 2);
+        habit.setCreatedAt(originalCreatedAt);
+        habit.setBestStreak(7);
+        Habit savedHabit = habitRepository.saveAndFlush(habit);
+
+        HabitRequestDto updateRequest = new HabitRequestDto("Learn Spring", "twice a day", 4);
+        HabitResponseDto updated = habitService.updateHabitById(savedHabit.getId(), updateRequest);
+
+        assertEquals("Learn Spring", updated.name());
+        assertEquals("twice a day", updated.description());
+        assertEquals(4, updated.target());
+        assertEquals(originalCreatedAt, updated.createAt());
+
+        Habit reloaded = habitRepository.findById(savedHabit.getId()).orElseThrow();
+        assertEquals(originalCreatedAt, reloaded.getCreatedAt());
+        assertEquals(7, reloaded.getBestStreak());
     }
 }

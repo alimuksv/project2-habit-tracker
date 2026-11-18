@@ -90,17 +90,15 @@ public class HabitService{
         var habit = repository.findById(id)
                 .orElseThrow(() -> new HabitNotFoundException("Habit not found by id = " + id));
 
-        var habitToSave = new Habit(
-                habit.getId(),
+        habit.updateDetails(
                 habitToUpdate.name(),
                 habitToUpdate.description(),
                 habitToUpdate.target()
         );
 
-        var updatedHabit = repository.save(habitToSave); //почему не habitToSave просто соханить, т.к. метод .save()
-                                                         //обнавленную сущность возвращает
+        var updatedHabit = repository.save(habit);
 
-        log.info("Successfully deleteHabitById: id = {}, updated habit = {}", id, habitToUpdate);
+        log.info("Successfully updateHabitById: id = {}, updated habit = {}", id, habitToUpdate);
 
         return habitToResponseDto(updatedHabit);
     }

@@ -76,5 +76,11 @@ public class Habit {
         createdAt = newCreatedAt;
     }
 
+    /** Updates mutable habit details while preserving createdAt, bestStreak, and records. */
+    public void updateDetails(String name, String description, Integer target){
+        this.name = name;
+        this.description = description;
+        this.target = target;
+    }
 
 }
